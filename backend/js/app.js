@@ -1,10 +1,12 @@
 const express = require('express');
 const cors = require('cors');
-const {cadastrar_usuario, listar_usuarios, login_usuario } = require('./controller');
+const {cadastrar_usuario, listar_usuarios, login_usuario, criarTabelas } = require('./controller');
 
 const app = express();
 app.use(express.json());
 app.use(cors());
+
+criarTabelas()
 
 app.get('/usuarios', async (request, response) => {
     var usuarios = await listar_usuarios();

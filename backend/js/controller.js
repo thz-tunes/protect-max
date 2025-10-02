@@ -1,5 +1,22 @@
+const e = require('express');
 const { conectar, desconectar } = require('./db');
-const bcrypt = require("bcryptjs");
+const bcrypt = require("bcrypt");
+
+
+async function criarTabelas() {
+    const conn = await conectar();
+
+    let query = `CREATE TABLE IF NOT EXISTS usuarios (
+                id INT AUTO_INCREMENT PRIMARY KEY,
+                nome VARCHAR(100) NOT NULL,
+                email VARCHAR(150) NOT NULL UNIQUE,
+                senha VARCHAR(255) NOT NULL
+                )`
+
+    await conn.execute(query)
+    await desconectar(conn);
+}
+
 
 async function listar_usuarios() {
     try {
@@ -28,12 +45,12 @@ async function cadastrar_usuario(usuario) {
         await conn.execute(
             "INSERT INTO usuarios (nome, email, senha) VALUES (?, ?, ?)",
             [
-                usuario.nome, 
-                usuario.email, 
+                usuario.nome,
+                usuario.email,
                 hashed
             ]
         );
-        
+
     } catch (err) {
         console.error("Erro ao cadastrar usuário:", err);
         throw err;
@@ -70,4 +87,4 @@ async function login_usuario(email, senhaDigitada) {
     }
 }
 
-module.exports = {cadastrar_usuario, listar_usuarios, login_usuario}
+module.exports = { cadastrar_usuario, listar_usuarios, login_usuario, criarTabelas }
