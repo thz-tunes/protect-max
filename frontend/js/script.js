@@ -26,13 +26,13 @@ class AuthSystem {
         const l = document.getElementById("loginNavItem") // botão de "Login"
         const u = document.getElementById("userDropdown") // dropdown do usuário
         const n = document.getElementById("userName")     // span para o nome
-    
+
         if (l && u && n) {
             l.classList.add("d-none")      // esconde botão login
             u.classList.remove("d-none")   // mostra dropdown do usuário
             n.textContent = this.currentUser.name.split(" ")[0] // mostra primeiro nome
         }
-    }    
+    }
 
 
     showLoginInterface() {
@@ -124,27 +124,27 @@ document.addEventListener("DOMContentLoaded", () => {
 })
 
 
-    document.querySelectorAll('[data-bs-target^="#modal"]:not([data-bs-target="#modalLogin"])').forEach(b => {
-        const m = b.getAttribute("data-bs-target")
-        const sb = document.querySelector(`${m} .btn-primary, ${m} .btn-success, ${m} .btn-warning`)
+document.querySelectorAll('[data-bs-target^="#modal"]:not([data-bs-target="#modalLogin"])').forEach(b => {
+    const m = b.getAttribute("data-bs-target")
+    const sb = document.querySelector(`${m} .btn-primary, ${m} .btn-success, ${m} .btn-warning`)
 
-        if (sb) {
-            sb.addEventListener("click", function () {
-                if (window.authSystem.isLoggedIn()) {
-                    const pn = this.textContent.replace("Assinar Plano ", "")
-                    window.authSystem.showNotification(`Redirecionando para pagamento do ${pn}...`, "success")
-                } else {
-                    window.authSystem.showNotification("Faça login para assinar um plano!", "error")
-                    const cm = bootstrap.Modal.getInstance(this.closest(".modal"))
-                    if (cm) cm.hide()
+    if (sb) {
+        sb.addEventListener("click", function () {
+            if (window.authSystem.isLoggedIn()) {
+                const pn = this.textContent.replace("Assinar Plano ", "")
+                window.authSystem.showNotification(`Redirecionando para pagamento do ${pn}...`, "success")
+            } else {
+                window.authSystem.showNotification("Faça login para assinar um plano!", "error")
+                const cm = bootstrap.Modal.getInstance(this.closest(".modal"))
+                if (cm) cm.hide()
 
-                    setTimeout(() => {
-                        new bootstrap.Modal(document.getElementById("modalLogin")).show()
-                    }, 300)
-                }
-            })
-        }
-    })
+                setTimeout(() => {
+                    new bootstrap.Modal(document.getElementById("modalLogin")).show()
+                }, 300)
+            }
+        })
+    }
+})
 
 
 
@@ -156,7 +156,7 @@ async function cadastrar_usuario() {
     }
 
     try {
-        const resposta = await fetch("http://localhost:5000/cadusuario", {
+        const resposta = await fetch("https://protect-max-production.up.railway.app/cadusuario", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(usuario)
@@ -181,7 +181,7 @@ async function login_usuario() {
     }
 
     try {
-        const resposta = await fetch("http://localhost:5000/login", {
+        const resposta = await fetch("https://protect-max-production.up.railway.app/login", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ email, senha })
@@ -192,7 +192,7 @@ async function login_usuario() {
         if (resposta.ok) {
             window.authSystem.currentUser = { name: email.split("@")[0], email }
             window.authSystem.showNotification(data.message || "Login realizado com sucesso!", "success")
-            
+
             // 🔑 troca botão Login → Nome usuário
             window.authSystem.showUserInterface()
 

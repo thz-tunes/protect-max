@@ -4,7 +4,11 @@ const {cadastrar_usuario, listar_usuarios, login_usuario, criarTabelas } = requi
 
 const app = express();
 app.use(express.json());
-app.use(cors());
+
+app.use(cors({
+    origin: ["http://localhost:5000", "http://127.0.0.1:5000", "https://thz-tunes.github.io"],
+    credentials: true
+}));
 
 criarTabelas()
 
